@@ -9,9 +9,11 @@
 CiteReady is an enterprise-grade API that analyzes web content and scores its "Generative Engine Optimization" (GEO) readiness. It tells you how likely AI search engines (like ChatGPT, Perplexity, and Google AI Overviews) are to cite your content as a source.
 
 ## 🎯 The Problem
+
 The SEO landscape has shifted from "ranking for keywords" to "being cited in AI answers." Traditional SEO tools don't measure AI citation readiness. CiteReady fills this gap by scoring your content based on what LLMs actually look for.
 
 ## ✨ Features (Phase 1)
+
 - **GEO Scoring Engine**: 5-category analysis (Entity Clarity, Citation Readiness, Content Structure, Freshness, Technical Accessibility).
 - **Comprehensive Parsing**: Extracts headings, schema markup (JSON-LD/Microdata), links, images, and metadata from raw HTML.
 - **Enterprise Observability**: Built-in Trace IDs, structured JSON logging, and database persistence for full audit trails.
@@ -20,7 +22,9 @@ The SEO landscape has shifted from "ranking for keywords" to "being cited in AI 
 ## 🚀 Quick Start
 
 ### 1. Installation
+
 Clone the repository and install dependencies:
+
 ```bash
 git clone https://github.com/kim40404/citeready.git
 cd citeready
@@ -30,22 +34,28 @@ pip install -r requirements.txt
 ```
 
 ### 2. Configuration
+
 Copy the environment template and adjust if necessary:
+
 ```bash
 cp .env.example .env
 ```
-*(By default, CiteReady uses SQLite which requires zero setup).*
+
+_(By default, CiteReady uses SQLite which requires zero setup)._
 
 ### 3. Run the Server
+
 ```bash
 uvicorn app.main:app --reload
 ```
+
 The API will be available at `http://localhost:8000`.
 Check out the interactive Swagger documentation at `http://localhost:8000/docs`.
 
 ## 🛠️ Usage
 
 ### Analyze a URL
+
 Send a POST request to `/api/v1/analyze`:
 
 ```bash
@@ -55,6 +65,7 @@ curl -X POST http://localhost:8000/api/v1/analyze \
 ```
 
 **Example Response:**
+
 ```json
 {
   "trace_id": "2c9d39cd-7ece-4608-8ca0-73025e61c55b",
@@ -87,19 +98,23 @@ curl -X POST http://localhost:8000/api/v1/analyze \
 ## 🏗️ Architecture
 
 CiteReady is built with modern, async Python:
+
 - **API**: FastAPI + Pydantic v2
 - **Scraping/Parsing**: HTTPX + BeautifulSoup4 + lxml
 - **Database**: SQLAlchemy 2.0 (async) + SQLite/PostgreSQL
 - **Observability**: Structlog + OpenTelemetry readiness
 
 ## 🗺️ Roadmap
+
 - **Phase 1 (Current)**: Foundation API, Content Parser, Rule-based GEO Scorer, Audit Database.
 - **Phase 2 (Upcoming)**: LLM Integration (Claude/OpenAI), Semantic Entity Detection, Content Gap Analysis.
 - **Phase 3**: Web Dashboard (Next.js), Batch Processing, Scheduled Scans.
 
 ## 👨‍💻 Author
+
 **Kimsang Silalahi**
 AI Engineer | LLM Apps & Agentic Systems
+
 - [Portfolio](https://kimsilalahi.vercel.app)
-- [LinkedIn](https://linkedin.com/in/kimsang-silalahi)
-- [Hugging Face](https://huggingface.co/kimsangsilalahi)
+- [LinkedIn](https://www.linkedin.com/in/kimsang-silalahi-3a8b13308/)
+- [Hugging Face](https://huggingface.co/Kimsang766)
