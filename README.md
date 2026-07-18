@@ -5,84 +5,88 @@
 ![Tech Stack](https://img.shields.io/badge/FastAPI-Next.js-blue?style=for-the-badge&logo=next.js)
 ![AI](https://img.shields.io/badge/Ollama-Llama_3.1-purple?style=for-the-badge)
 
-## 📖 Apa itu CiteReady?
-Di era modern, SEO tradisional (berbasis *keyword*) sudah mulai ditinggalkan. Pengguna internet kini mencari jawaban langsung melalui mesin pencari AI seperti **ChatGPT, Perplexity, dan Google AI Overviews**.
+## 📖 What is CiteReady?
+In the modern era, traditional keyword-based SEO is becoming obsolete. Internet users now seek direct answers through AI search engines like **ChatGPT, Perplexity, and Google AI Overviews**.
 
-**CiteReady** adalah aplikasi SaaS B2B penilai **GEO (Generative Engine Optimization)**. Aplikasi ini bertindak sebagai auditor cerdas yang membaca konten *website* Anda layaknya sebuah mesin AI. Tujuannya adalah untuk memberi tahu Anda secara spesifik **"Apa yang harus diperbaiki agar konten Anda dikutip (cited) dan dijadikan sumber referensi utama oleh AI Search Engines."**
+**CiteReady** is a B2B SaaS application designed to score **GEO (Generative Engine Optimization)**. It acts as an intelligent auditor that reads your website's content exactly like an AI would. Its primary goal is to tell you specifically **"what to fix so your content gets cited and used as a primary reference source by AI Search Engines."**
 
-## ✨ Fitur Utama
-1. **Technical SEO Scoring:** Membedah struktur HTML (H1, Meta Tags, Schema JSON-LD) untuk memastikan mesin pencari dapat mengindeks konten dengan mudah.
-2. **AI Semantic Analysis:** Menggunakan **Llama 3.1 (Lokal via Ollama)** untuk membaca konten dan menilai 3 pilar utama:
-   - *Authority* (Kredibilitas Pakar)
-   - *Fact Density* (Kepadatan Data & Fakta)
-   - *Clarity* (Kejelasan Jawaban)
-3. **Priority Fixes & AI Insights:** Menghasilkan "Buku Rapot" instan berisi kritik konstruktif dan langkah perbaikan yang harus dilakukan penulis agar skor GEO mereka meningkat.
-4. **Modern Solid UI:** Dashboard berkinerja tinggi, bersih, dan berfokus pada aksesibilitas (*High-Contrast Dark Mode*).
+## ✨ Key Features
+1. **Technical SEO Scoring:** Analyzes HTML structure (H1, Meta Tags, Schema JSON-LD) to ensure search engines can easily crawl and index the content.
+2. **AI Semantic Analysis:** Utilizes **Llama 3.1 (Local via Ollama)** to read the content and evaluate 3 core pillars:
+   - *Authority* (Expert Credibility)
+   - *Fact Density* (Richness of Data & Facts)
+   - *Clarity* (Directness of the Answer)
+3. **Priority Fixes & AI Insights:** Generates an instant "Report Card" filled with constructive feedback and actionable steps writers must take to improve their GEO score.
+4. **Modern Solid UI:** A highly performant, clean, and accessibility-focused dashboard (*High-Contrast Dark Mode*).
 
-## 🛠️ Arsitektur Teknologi (Full-Stack)
-Aplikasi ini dirancang dengan standar Enterprise *Two-Tier Architecture*:
+## 🛠️ Technology Stack (Full-Stack)
+This application is built on an Enterprise Two-Tier Architecture:
 
 - **Backend (Python):** 
-  - `FastAPI` (REST API Berkecepatan Tinggi)
+  - `FastAPI` (High-Performance REST API)
   - `SQLAlchemy` + `SQLite` (Audit Trail Database)
-  - `LiteLLM` + `Tenacity` (Konektor LLM yang aman dari *timeout*)
+  - `LiteLLM` + `Tenacity` (Resilient LLM connection with timeout safety)
 - **Frontend (TypeScript):**
   - `Next.js 15` (App Router)
-  - `Tailwind CSS v4` + `shadcn/ui` (Sistem Desain UI)
-  - `Recharts` (Visualisasi Skor Data)
+  - `Tailwind CSS v4` + `shadcn/ui` (UI Design System)
+  - `Recharts` (Data Score Visualization)
 - **AI Engine (100% Local & Private):**
-  - `Ollama` menjalankan model **Llama 3.1** secara lokal tanpa biaya API eksternal ($0 Cost).
+  - `Ollama` running the **Llama 3.1** model locally without external API costs ($0 Cost).
 
 ---
 
-## 🚀 Cara Menjalankan Project Secara Lokal
+## 🚀 How to Run the Project Locally
 
-Karena ini adalah sistem *Full-Stack* dengan AI Lokal, Anda perlu menjalankan 3 komponen secara paralel (masing-masing di terminal yang terpisah).
+Because this is a Full-Stack system with a Local AI, you need to run 3 components in parallel (each in a separate terminal).
 
-### Tahap 1: Jalankan Mesin AI (Ollama)
-Pastikan Anda telah menginstal [Ollama](https://ollama.com/) di komputer Anda.
-1. Buka terminal baru dan jalankan server Ollama (jika belum berjalan di latar belakang).
-2. Pastikan model Llama 3.1 sudah terunduh:
+### Phase 1: Run the AI Engine (Ollama)
+Ensure you have installed [Ollama](https://ollama.com/) on your machine.
+1. Open a new terminal and run the Ollama server (if it isn't already running in the background).
+2. Ensure the Llama 3.1 model is downloaded:
    ```bash
    ollama pull llama3.1
    ```
 
-### Tahap 2: Jalankan API Backend (FastAPI)
-Buka terminal baru, arahkan ke folder utama `citeready`, dan jalankan:
+### Phase 2: Run the Backend API (FastAPI)
+Open a new terminal, navigate to the main `citeready` folder, and run:
 ```bash
-# 1. Aktifkan Virtual Environment (Windows)
+# 1. Activate Virtual Environment (Windows)
 .venv\Scripts\activate
 
-# 2. Instal dependensi (Jika belum)
+# 2. Install dependencies (If not already installed)
 pip install -r requirements.txt
 
-# 3. Jalankan server di port 8000
+# 3. Run the server on port 8000
 python -m uvicorn app.main:app --reload --port 8000
 ```
-*API sekarang berjalan di `http://localhost:8000`*
+*The API is now running at `http://localhost:8000`*
 
-### Tahap 3: Jalankan UI Frontend (Next.js)
-Buka terminal baru, arahkan ke dalam folder `citeready/frontend`, dan jalankan:
+### Phase 3: Run the Frontend UI (Next.js)
+Open a new terminal, navigate into the `citeready/frontend` folder, and run:
 ```bash
-# 1. Masuk ke folder frontend
+# 1. Enter the frontend directory
 cd frontend
 
-# 2. Instal dependensi Node.js
+# 2. Install Node.js dependencies
 npm install
 
-# 3. Jalankan server web
+# 3. Run the web server
 npm run dev
 ```
-*Dashboard Web sekarang berjalan di `http://localhost:3000`*
+*The Web Dashboard is now running at `http://localhost:3000`*
 
 ---
 
-## 💡 Cara Penggunaan (Workflow)
-1. Buka browser dan kunjungi `http://localhost:3000`.
-2. Masukkan URL *website* atau *blog post* yang ingin diuji coba (contoh: `https://example.com`).
-3. Tekan tombol **Analyze Content**.
-4. Tunggu beberapa detik selagi FastAPI men-*scrape* konten dan Llama 3.1 melakukan pembedahan semantik.
-5. Dapatkan skor **Blended GEO Score** akhir Anda beserta kartu rekomendasi perbaikan!
+## 💡 Workflow Usage
+1. Open your browser and visit `http://localhost:3000`.
+2. Enter the URL of the website or blog post you want to test (e.g., `https://example.com`).
+3. Click the **Analyze Content** button.
+4. Wait a few seconds while FastAPI scrapes the content and Llama 3.1 performs the semantic dissection.
+5. Receive your final **Blended GEO Score** along with priority fix recommendation cards!
 
 ---
-*Developed as part of Advanced Agentic Coding Architecture Portfolio.*
+
+### Connect with Me
+- **GitHub:** [kim40404](https://github.com/kim40404)
+- **LinkedIn:** [kimkimsang](https://www.linkedin.com/in/kimkimsang/)
+- **Hugging Face:** [kimkimsang](https://huggingface.co/kimkimsang)
