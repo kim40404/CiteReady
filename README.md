@@ -88,5 +88,5 @@ npm run dev
 
 ### Connect with Me
 - **GitHub:** [kim40404](https://github.com/kim40404)
-- **LinkedIn:** [kimkimsang](https://www.linkedin.com/in/kimkimsang/)
-- **Hugging Face:** [kimkimsang](https://huggingface.co/kimkimsang)
+- **LinkedIn:** [Kimsang Silalahi](https://www.linkedin.com/in/kimsang-silalahi-3a8b13308/)
+- **Hugging Face:** [Kimsang Silalahi](https://huggingface.co/Kimsang766)
