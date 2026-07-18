@@ -27,6 +27,7 @@ from app.schemas.analysis import (
 from app.services.parser import parse_html, parse_plain_text
 from app.services.scorer import calculate_geo_score, ENGINE_VERSION
 from app.services.scraper import ScraperError, fetch_url
+from app.services.llm_analyzer import analyze_semantics
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -86,10 +87,18 @@ async def analyze_content(
         logger.error("analyze.parse_failed", error=str(e))
         raise HTTPException(status_code=500, detail=f"Failed to parse content: {str(e)}")
 
+    # ── Semantic LLM Analysis (Phase 2) ──────────────────────────
+    try:
+        semantic_result = await analyze_semantics(content_meta, raw_text=request.text)
+    except Exception as e:
+        logger.error("analyze.llm_failed", error=str(e))
+        semantic_result = None
+
     # ── Score ────────────────────────────────────────────────────
     try:
         geo_score, grade, scores, issues, priority_actions = calculate_geo_score(
             meta=content_meta,
+            semantic_result=semantic_result,
             keywords=request.keywords or None,
         )
     except Exception as e:
@@ -106,10 +115,12 @@ async def analyze_content(
         trace_id=trace_id,
         url=url_str,
         geo_score=geo_score,
+        semantic_score=semantic_result.total_semantic_score if semantic_result else 0.0,
         grade=grade,
         scores=scores,
         content_meta=content_meta,
         issues=issues,
+        ai_insights=semantic_result.insights if semantic_result else [],
         priority_actions=priority_actions,
         analyzed_at=analyzed_at,
         latency_ms=latency_ms,
@@ -132,6 +143,8 @@ async def analyze_content(
         record.set_json_field("issues", [i.model_dump() for i in issues])
         record.set_json_field("priority_actions", priority_actions)
         record.set_json_field("content_meta", content_meta.model_dump())
+        if semantic_result:
+            record.set_json_field("ai_insights", semantic_result.insights)
 
         session.add(record)
         await session.commit()

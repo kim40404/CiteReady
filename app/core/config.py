@@ -17,6 +17,11 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./data/citeready.db"
 
+    # LLM Settings (Ollama by default)
+    LLM_MODEL: str = "ollama/llama3.1"
+    OLLAMA_API_BASE: str = "http://localhost:11434"
+    LLM_TIMEOUT: int = 45  # Local LLMs can be slow
+
     # Scraper settings
     SCRAPER_TIMEOUT: int = 15  # seconds
     SCRAPER_USER_AGENT: str = (

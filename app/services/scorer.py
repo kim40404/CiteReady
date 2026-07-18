@@ -18,7 +18,7 @@ import re
 from datetime import datetime, timezone
 
 from app.core.config import settings
-from app.schemas.analysis import CategoryScore, ContentMeta, Issue
+from app.schemas.analysis import CategoryScore, ContentMeta, Issue, SemanticAnalysisResult
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -28,6 +28,7 @@ ENGINE_VERSION = "0.1.0"
 
 def calculate_geo_score(
     meta: ContentMeta,
+    semantic_result: SemanticAnalysisResult | None = None,
     keywords: list[str] | None = None,
 ) -> tuple[float, str, list[CategoryScore], list[Issue], list[str]]:
     """Calculate the GEO score for analyzed content.
@@ -51,9 +52,23 @@ def calculate_geo_score(
     # ── Build category list ──────────────────────────────────────
     categories = [entity_score, citation_score, structure_score, freshness_score, technical_score]
 
-    # ── Calculate weighted total ─────────────────────────────────
-    total_score = sum(cat.score * cat.weight for cat in categories)
-    total_score = round(min(100.0, max(0.0, total_score)), 1)
+    # ── Calculate Technical Total (60%) ──────────────────────────
+    technical_total = sum(cat.score * cat.weight for cat in categories)
+    technical_total = round(min(100.0, max(0.0, technical_total)), 1)
+    
+    # ── Add Semantic Score (40%) ─────────────────────────────────
+    if semantic_result:
+        semantic_score = semantic_result.total_semantic_score
+        total_score = (technical_total * 0.6) + (semantic_score * 0.4)
+        
+        # Add AI insights to priority actions if they exist
+        ai_actions = [f"🤖 AI Insight: {insight}" for insight in semantic_result.insights]
+    else:
+        # Fallback to pure technical if AI is disabled/failed
+        total_score = technical_total
+        ai_actions = []
+
+    total_score = round(total_score, 1)
 
     # ── Grade ────────────────────────────────────────────────────
     grade = _calculate_grade(total_score)
@@ -63,11 +78,12 @@ def calculate_geo_score(
     all_issues.sort(key=lambda i: severity_order.get(i.severity, 99))
 
     # ── Priority actions (top 5 from critical/warning issues) ────
-    priority_actions = [
+    priority_actions = ai_actions + [
         issue.recommendation
         for issue in all_issues
         if issue.severity in ("critical", "warning")
-    ][:5]
+    ]
+    priority_actions = priority_actions[:7] # Allow up to 7 now with AI
 
     if not priority_actions:
         priority_actions = ["Content looks good! Consider adding more structured data for bonus points."]

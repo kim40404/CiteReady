@@ -90,6 +90,22 @@ class ContentMeta(BaseModel):
     has_howto: bool = False
 
 
+class SemanticAnalysisResult(BaseModel):
+    """Structured response from the LLM semantic analyzer."""
+
+    reasoning_authority: str = Field(description="LLM's thought process for authority.", default="")
+    authority_score: float = Field(ge=0, le=100, description="Score for author/expert credibility.")
+    
+    reasoning_fact_density: str = Field(description="LLM's thought process for fact density.", default="")
+    fact_density_score: float = Field(ge=0, le=100, description="Score for factual density vs fluff.")
+    
+    reasoning_clarity: str = Field(description="LLM's thought process for clarity.", default="")
+    clarity_score: float = Field(ge=0, le=100, description="Score for directness and answer clarity.")
+    
+    total_semantic_score: float = Field(ge=0, le=100, description="Combined semantic score.")
+    insights: list[str] = Field(description="Actionable semantic insights from the AI.")
+
+
 # ── Response Schemas ─────────────────────────────────────────────
 
 
@@ -104,6 +120,9 @@ class AnalyzeResponse(BaseModel):
     geo_score: float = Field(
         ge=0, le=100, description="Overall GEO score (0-100)."
     )
+    semantic_score: float = Field(
+        ge=0, le=100, description="AI-driven semantic score (0-100)."
+    )
     grade: str = Field(
         description="Letter grade: A (80+), B (60-79), C (40-59), D (20-39), F (<20)."
     )
@@ -116,7 +135,10 @@ class AnalyzeResponse(BaseModel):
 
     # Issues & Recommendations
     issues: list[Issue] = Field(
-        description="List of issues found, ordered by severity."
+        description="List of technical issues found, ordered by severity."
+    )
+    ai_insights: list[str] = Field(
+        description="Semantic recommendations generated directly by the LLM."
     )
     priority_actions: list[str] = Field(
         description="Top 5 prioritized actions to improve the score."

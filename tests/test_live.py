@@ -13,9 +13,15 @@ data = r.json()
 
 if r.status_code == 200:
     print(f"GEO Score: {data['geo_score']} (Grade: {data['grade']})")
+    print(f"Semantic Score (AI): {data.get('semantic_score', 0.0)}")
     print(f"Trace ID: {data['trace_id']}")
     print(f"Latency: {data['latency_ms']}ms")
     print(f"Word Count: {data['content_meta']['word_count']}")
+    print()
+
+    print("=== AI INSIGHTS ===")
+    for insight in data.get("ai_insights", []):
+        print(f"  💡 {insight}")
     print()
 
     print("=== SCORE BREAKDOWN ===")
