@@ -15,7 +15,9 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./data/citeready.db"
+    import os
+    from pydantic import Field
+    DATABASE_URL: str = Field(default_factory=lambda: "sqlite+aiosqlite:////tmp/citeready.db" if os.getenv("VERCEL") else "sqlite+aiosqlite:///./data/citeready.db")
 
     # CORS Config
     FRONTEND_CORS_ORIGINS: str = "*"  # Comma-separated list for production, e.g., "https://citeready.com"
