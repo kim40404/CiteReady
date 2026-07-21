@@ -1,5 +1,7 @@
 """CiteReady application configuration via environment variables."""
 
+import os
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
@@ -15,8 +17,6 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     # Database
-    import os
-    from pydantic import Field
     DATABASE_URL: str = Field(default_factory=lambda: "sqlite+aiosqlite:////tmp/citeready.db" if os.getenv("VERCEL") else "sqlite+aiosqlite:///./data/citeready.db")
 
     # CORS Config
