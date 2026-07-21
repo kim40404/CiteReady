@@ -1,0 +1,28 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+.env.example
+
+# Frontend directory (Deploy this separately to Vercel)
+frontend/
+
+# Local databases
+data/*.db
+data/*.sqlite3
+
+# Test coverage
+.coverage
+htmlcov/

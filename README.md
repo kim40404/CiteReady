@@ -79,27 +79,41 @@ npm run dev
 
 ## 🌍 Production Deployment
 
-CiteReady is engineered to be deployed in a decoupled environment. While Local Development relies on Ollama for cost-free testing, **Production should utilize a Cloud AI Provider (like OpenAI or Anthropic)** via the LiteLLM proxy for maximum stability and speed.
+CiteReady is engineered for a decoupled containerized deployment. While Local Development relies on Ollama for cost-free testing, **Production should utilize a Cloud AI Provider (like OpenAI or Anthropic)** via the LiteLLM proxy for maximum stability and speed.
 
-### Recommended Infrastructure
-- **Frontend:** Vercel (Native Next.js support)
-- **Backend:** Render or Google Cloud Run (FastAPI/Docker)
+### Phase 1: Deploy Backend to Google Cloud Run
+The backend includes a `Dockerfile` ready for Google Cloud Run.
+1. Install the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install).
+2. Authenticate and configure your project:
+   ```bash
+   gcloud auth login
+   gcloud config set project YOUR_PROJECT_ID
+   ```
+3. Deploy the container:
+   ```bash
+   gcloud run deploy citeready-api --source . --port 8080 --allow-unauthenticated
+   ```
+4. In the Cloud Run Console, set these **Environment Variables**:
+   ```env
+   FRONTEND_CORS_ORIGINS=https://citeready.yourdomain.com
+   LLM_PROVIDER=openai
+   LLM_MODEL=gpt-4o-mini
+   LLM_API_KEY=sk-proj-your-api-key
+   LLM_TIMEOUT=15
+   ```
+   *Note: If the AI provider fails or rate-limits, the API will gracefully fall back to returning baseline technical SEO scores so your UI does not crash.*
 
-### 1. Backend Production Config (`.env`)
-Before deploying the FastAPI backend to your cloud provider, set the following environment variables:
-```env
-FRONTEND_CORS_ORIGINS=https://citeready.yourdomain.com
-LLM_PROVIDER=openai
-LLM_MODEL=gpt-4o-mini
-LLM_API_KEY=sk-proj-your-api-key
-LLM_TIMEOUT=15
-```
-
-### 2. Frontend Production Config (`frontend/.env.local`)
-Before deploying the Next.js frontend to Vercel, define the public URL of your deployed backend:
-```env
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-```
+### Phase 2: Deploy Frontend to Vercel
+1. Push this repository to GitHub.
+2. Log into [Vercel](https://vercel.com/) and click **Add New -> Project**.
+3. Import your GitHub repository.
+4. Set the **Framework Preset** to `Next.js`.
+5. Set the **Root Directory** to `frontend`.
+6. Add the following **Environment Variable**:
+   ```env
+   NEXT_PUBLIC_API_URL=https://citeready-api-xyz.a.run.app  # (Your Cloud Run URL)
+   ```
+7. Click **Deploy**.
 
 ---
 
