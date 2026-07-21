@@ -81,7 +81,7 @@ export function InsightsAccordion({ insights, actions }: InsightsAccordionProps)
             <p>No issues found. Your content is perfectly optimized.</p>
           </div>
         ) : (
-          <Accordion type="single" collapsible={true} className="w-full space-y-4">
+          <Accordion className="w-full space-y-4">
             {items.map((item) => (
               <AccordionItem 
                 key={item.id} 
