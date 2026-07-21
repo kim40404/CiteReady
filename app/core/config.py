@@ -17,10 +17,15 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./data/citeready.db"
 
-    # LLM Settings (Ollama by default)
+    # CORS Config
+    FRONTEND_CORS_ORIGINS: str = "*"  # Comma-separated list for production, e.g., "https://citeready.com"
+
+    # AI Provider Settings (Supports local Ollama or Cloud Providers via LiteLLM)
+    LLM_PROVIDER: str = "ollama"  # e.g., 'ollama', 'openai', 'anthropic'
     LLM_MODEL: str = "ollama/llama3.1"
-    OLLAMA_API_BASE: str = "http://localhost:11434"
-    LLM_TIMEOUT: int = 45  # Local LLMs can be slow
+    LLM_BASE_URL: str = "http://localhost:11434"
+    LLM_API_KEY: str | None = None
+    LLM_TIMEOUT: int = 45  # Adjust for production APIs
 
     # Scraper settings
     SCRAPER_TIMEOUT: int = 15  # seconds

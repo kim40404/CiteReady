@@ -42,16 +42,25 @@ async def analyze_semantics(
         content_to_analyze = " ".join(words[:2500]) + "... [TRUNCATED]"
 
     try:
-        response = await acompletion(
-            model=settings.LLM_MODEL,
-            api_base=settings.OLLAMA_API_BASE if "ollama" in settings.LLM_MODEL else None,
-            messages=[
+        # Dynamically configure LiteLLM based on provider
+        kwargs = {
+            "model": settings.LLM_MODEL,
+            "messages": [
                 {"role": "system", "content": SEMANTIC_EVAL_PROMPT},
                 {"role": "user", "content": f"Analyze this content:\n\n{content_to_analyze}"}
             ],
-            response_format={"type": "json_object"},
-            timeout=settings.LLM_TIMEOUT,
-        )
+            "response_format": {"type": "json_object"},
+            "timeout": settings.LLM_TIMEOUT,
+        }
+
+        if settings.LLM_PROVIDER == "ollama":
+            kwargs["api_base"] = settings.LLM_BASE_URL
+        elif settings.LLM_API_KEY:
+            kwargs["api_key"] = settings.LLM_API_KEY
+            if settings.LLM_BASE_URL:
+                kwargs["api_base"] = settings.LLM_BASE_URL
+
+        response = await acompletion(**kwargs)
 
         # Parse JSON response
         result_text = response.choices[0].message.content
@@ -83,13 +92,13 @@ async def analyze_semantics(
         return result
 
     except Exception as e:
-        logger.error("llm.analysis_failed", error=str(e))
-        # Graceful degradation: If LLM fails (e.g. Ollama is down), return a neutral score
+        logger.error("llm.analysis_failed", error=str(e), provider=settings.LLM_PROVIDER)
+        # Graceful degradation: If LLM fails (e.g. Ollama is down or API timeouts), return a neutral score
         # so the technical analysis can still proceed.
         return SemanticAnalysisResult(
             authority_score=50.0,
             fact_density_score=50.0,
             clarity_score=50.0,
             total_semantic_score=50.0,
-            insights=["LLM analysis failed. This is a fallback neutral score."]
+            insights=[f"🤖 AI Insight: The AI semantic engine ({settings.LLM_PROVIDER}) is currently unreachable. Returning baseline scores so technical analysis can proceed."]
         )

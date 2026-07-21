@@ -77,6 +77,32 @@ npm run dev
 
 ---
 
+## 🌍 Production Deployment
+
+CiteReady is engineered to be deployed in a decoupled environment. While Local Development relies on Ollama for cost-free testing, **Production should utilize a Cloud AI Provider (like OpenAI or Anthropic)** via the LiteLLM proxy for maximum stability and speed.
+
+### Recommended Infrastructure
+- **Frontend:** Vercel (Native Next.js support)
+- **Backend:** Render or Google Cloud Run (FastAPI/Docker)
+
+### 1. Backend Production Config (`.env`)
+Before deploying the FastAPI backend to your cloud provider, set the following environment variables:
+```env
+FRONTEND_CORS_ORIGINS=https://citeready.yourdomain.com
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4o-mini
+LLM_API_KEY=sk-proj-your-api-key
+LLM_TIMEOUT=15
+```
+
+### 2. Frontend Production Config (`frontend/.env.local`)
+Before deploying the Next.js frontend to Vercel, define the public URL of your deployed backend:
+```env
+NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+```
+
+---
+
 ## 💡 Workflow Usage
 1. Open your browser and visit `http://localhost:3000`.
 2. Enter the URL of the website or blog post you want to test (e.g., `https://example.com`).
