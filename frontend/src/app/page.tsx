@@ -36,7 +36,25 @@ export default function Home() {
       }
 
       const data = await res.json();
-      setResult(data);
+      
+      // Transform data dari Backend ke format UI
+      const mappedResult = {
+        geo_score: data.seo_score,
+        semantic_score: data.ai_citation_score,
+        grade: data.seo_score >= 80 ? "A" : data.seo_score >= 60 ? "B" : "C",
+        ai_insights: [
+          { category: "System", text: `Enterprise Trace ID: ${data.trace_id}` },
+          { category: "SEO Score", text: `Base SEO Score is ${data.seo_score}/100` },
+          { category: "AI Citation", text: `Visibility score for AI agents is ${data.ai_citation_score}/100` }
+        ],
+        priority_actions: data.content_gaps.map((gap: any) => ({
+          title: `Gap: ${gap.missing_topic}`,
+          description: gap.impact,
+          impact: "high"
+        }))
+      };
+
+      setResult(mappedResult);
     } catch (err: any) {
       setError(err.message || "Failed to connect to backend. Make sure the API server is running on port 8000.");
     } finally {
