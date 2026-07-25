@@ -43,15 +43,13 @@ export default function Home() {
         semantic_score: data.ai_citation_score,
         grade: data.seo_score >= 80 ? "A" : data.seo_score >= 60 ? "B" : "C",
         ai_insights: [
-          { category: "System", text: `Enterprise Trace ID: ${data.trace_id}` },
-          { category: "SEO Score", text: `Base SEO Score is ${data.seo_score}/100` },
-          { category: "AI Citation", text: `Visibility score for AI agents is ${data.ai_citation_score}/100` }
+          `Enterprise Trace ID: ${data.trace_id}`,
+          `Base SEO Score is ${data.seo_score}/100`,
+          `Visibility score for AI agents is ${data.ai_citation_score}/100`
         ],
-        priority_actions: data.content_gaps.map((gap: any) => ({
-          title: `Gap: ${gap.missing_topic}`,
-          description: gap.impact,
-          impact: "high"
-        }))
+        priority_actions: data.content_gaps.map((gap: any) => 
+          `Missing Topic: ${gap.missing_topic} — ${gap.impact}`
+        )
       };
 
       setResult(mappedResult);
