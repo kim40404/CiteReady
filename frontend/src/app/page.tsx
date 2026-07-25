@@ -37,6 +37,11 @@ export default function Home() {
 
       const data = await res.json();
       
+      // Validasi ketat: pastikan server benar-benar membalas dengan JSON yang kita harapkan
+      if (!data || data.content_gaps === undefined) {
+        throw new Error(`Server membalas dengan data aneh (Bukan hasil AI): ${JSON.stringify(data)}`);
+      }
+
       // Transform data dari Backend ke format UI
       const mappedResult = {
         geo_score: data.seo_score,
