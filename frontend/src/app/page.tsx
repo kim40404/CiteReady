@@ -23,7 +23,10 @@ export default function Home() {
     setResult(null);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      // Fallback ke URL Backend Vercel jika env variable tidak terbaca
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_URL !== "http://localhost:8000" 
+        ? process.env.NEXT_PUBLIC_API_URL 
+        : "https://citeready-backend.vercel.app";
       const res = await fetch(`${apiUrl}/api/v1/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
